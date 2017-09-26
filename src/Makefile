@@ -1,12 +1,18 @@
 # -*- Makefile -*-
 
-all: httpGetRequest
+.PHONY: all clean
 
-httpGetRequest: httpGetRequest.o
-	gcc httpGetRequest.o -o httpGetRequest
+all: main.o httpMethods.o utils.o
+	gcc main.o httpMethods.o utils.o -o htbench
 
-httpGetRequest.o: httpGetRequest.c
-	gcc -c httpGetRequest.c
+main.o: main.c inputs.h httpMethods.h constants.h
+	gcc -c main.c
+
+httpMethods.o: httpMethods.c httpMethods.h inputs.h constants.h utils.h
+	gcc -c httpMethods.c
+
+utils.o: utils.c utils.h
+	gcc -c utils.c
 
 clean:
-	rm -rf *o httpGetRequest
+	rm -rf *o htbench
