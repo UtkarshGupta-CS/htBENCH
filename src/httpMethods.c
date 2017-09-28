@@ -14,14 +14,21 @@
 #include "utils.h"
 #include "httpMethods.h"
 
+pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+
 void getMethod(void *arguments)
 {
+
   struct arg_struct *args = arguments;
 
-  int looperdooper = 0;
-
-  while (looperdooper <= 3)
+  while (args->counter != atoi(args->argv[5]))
   {
+    pthread_mutex_lock(&mutex1);
+
+    args->counter++;
+
+    pthread_mutex_unlock(&mutex1);
+
     int sockfd, portno, n;
     struct sockaddr_in serv_addr;
     struct hostent *server;
@@ -69,9 +76,5 @@ void getMethod(void *arguments)
 
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
-
-    looperdooper++;
   }
-
-  pthread_exit(NULL);
 }

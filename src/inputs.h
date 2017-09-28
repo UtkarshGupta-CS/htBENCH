@@ -5,6 +5,7 @@ typedef struct arg_struct
 {
   int argc;
   char **argv;
+  int counter;
 } arg_struct;
 
 #endif // !INPUT_H
