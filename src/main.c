@@ -1,23 +1,27 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <time.h>
 
 #include "inputs.h"
 #include "httpMethods.h"
 #include "constants.h"
+#include "utils.h"
+
 int main(int argc, char **argv)
 {
   struct arg_struct args;
   args.argc = argc;
   args.argv = argv;
-  args.counter = 0;
+  args.reqCounter = 0;
   int threadCount = atoi(argv[4]);
 
   pthread_t threads[threadCount];
 
   int rc;
   long t;
+
+  // stores the current time in the startTime global variable
+  args.startTime = currentTime();
 
   for (t = 0; t < threadCount; t++)
   {

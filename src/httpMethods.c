@@ -21,12 +21,18 @@ void getMethod(void *arguments)
 
   struct arg_struct *args = arguments;
 
-  while (args->counter != atoi(args->argv[5]))
+  while (args->reqCounter != atoi(args->argv[5]))
   {
     pthread_mutex_lock(&mutex1);
 
-    args->counter++;
-
+    args->reqCounter++;
+    if (currentTime() == args->startTime + atoi(args->argv[3]))
+    {
+      exit(0);
+    }
+    
+    printf("\n--\n%d\n--\n", args->reqCounter++);
+    
     pthread_mutex_unlock(&mutex1);
 
     int sockfd, portno, n;
