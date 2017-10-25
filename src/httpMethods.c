@@ -13,26 +13,26 @@
 #include "constants.h"
 #include "utils.h"
 #include "httpMethods.h"
+#include "stats.h"
 
 pthread_mutex_t mutex1 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex2 = PTHREAD_MUTEX_INITIALIZER;
 
 void getMethod(void *arguments)
 {
 
   struct arg_struct *args = arguments;
+  struct resultStats res;
 
-  while (args->reqCounter != atoi(args->argv[5]))
+  while (res.completeReqCount < atoi(args->argv[5]))
   {
     pthread_mutex_lock(&mutex1);
 
-    args->reqCounter++;
     if (currentTime() == args->startTime + atoi(args->argv[3]))
     {
       exit(0);
     }
-    
-    printf("\n--\n%d\n--\n", args->reqCounter++);
-    
+
     pthread_mutex_unlock(&mutex1);
 
     int sockfd, portno, n;
@@ -64,21 +64,49 @@ void getMethod(void *arguments)
     serv_addr.sin_port = htons(portno);
 
     if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
+    {
+      res.failReqCount++;
       error("ERROR connecting");
+    }
 
     n = write(sockfd, "GET /\r\n", strlen("GET /\r\n"));
 
     if (n < 0)
+    {
+      res.failReqCount++;
       error("ERROR writing to socket");
+    }
 
     bzero(buffer, BUFFER_SIZE);
 
     n = read(sockfd, buffer, BUFFER_SIZE - 1);
 
     if (n < 0)
+    {
+      res.failReqCount++;
       error("ERROR reading from socket");
+    }
+    else
+    {
+      pthread_mutex_lock(&mutex2);
 
-    printf("%s\n", buffer);
+      res.completeReqCount++;
+      if (currentTime() >= args->startTime + atoi(args->argv[3]))
+      {
+        exit(0);
+      }
+
+      printf("%s\n", buffer);
+      printf("\n--\n%d\n--\n", res.completeReqCount);
+      printf("\n--\n%d\n--\n", res.failReqCount);
+
+      if (res.completeReqCount >= atoi(args->argv[5]))
+      {
+        exit(0);
+      }
+
+      pthread_mutex_unlock(&mutex2);
+    }
 
     shutdown(sockfd, SHUT_RDWR);
     close(sockfd);

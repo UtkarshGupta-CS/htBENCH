@@ -1,10 +1,11 @@
 #ifndef STATS_H
 
-typedef struct resultType
+typedef struct resultStats
 {
   int completeReqCount;
   int failReqCount;
   int timeTaken;
-} resultType;
+  int threadCount;
+} resultStats;
 
 #endif // !STATS_H

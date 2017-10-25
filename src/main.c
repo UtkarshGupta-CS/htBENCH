@@ -6,13 +6,18 @@
 #include "httpMethods.h"
 #include "constants.h"
 #include "utils.h"
+#include "stats.h"
 
 int main(int argc, char **argv)
 {
   struct arg_struct args;
   args.argc = argc;
   args.argv = argv;
-  args.reqCounter = 0;
+
+  struct resultStats res;
+
+  res.completeReqCount = 0;
+
   int threadCount = atoi(argv[4]);
 
   pthread_t threads[threadCount];
