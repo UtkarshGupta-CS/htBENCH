@@ -14,9 +14,7 @@ int main(int argc, char **argv)
   args.argc = argc;
   args.argv = argv;
 
-  struct resultStats res;
-
-  res.completeReqCount = 0;
+  args.completeReqCount = 0;
 
   int threadCount = atoi(argv[4]);
 

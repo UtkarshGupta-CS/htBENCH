@@ -22,9 +22,8 @@ void getMethod(void *arguments)
 {
 
   struct arg_struct *args = arguments;
-  struct resultStats res;
 
-  while (res.completeReqCount < atoi(args->argv[5]))
+  while (args->completeReqCount < atoi(args->argv[5]))
   {
     pthread_mutex_lock(&mutex1);
 
@@ -45,6 +44,8 @@ void getMethod(void *arguments)
       exit(0);
     }
     portno = atoi(args->argv[2]);
+
+    // socket is created using socket system call
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
       error("ERROR opening socket");
@@ -65,7 +66,7 @@ void getMethod(void *arguments)
 
     if (connect(sockfd, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0)
     {
-      res.failReqCount++;
+      args->failReqCount++;
       error("ERROR connecting");
     }
 
@@ -73,7 +74,7 @@ void getMethod(void *arguments)
 
     if (n < 0)
     {
-      res.failReqCount++;
+      args->failReqCount++;
       error("ERROR writing to socket");
     }
 
@@ -83,24 +84,24 @@ void getMethod(void *arguments)
 
     if (n < 0)
     {
-      res.failReqCount++;
+      args->failReqCount++;
       error("ERROR reading from socket");
     }
     else
     {
       pthread_mutex_lock(&mutex2);
 
-      res.completeReqCount++;
+      args->completeReqCount++;
       if (currentTime() >= args->startTime + atoi(args->argv[3]))
       {
         exit(0);
       }
 
       printf("%s\n", buffer);
-      printf("\n--\n%d\n--\n", res.completeReqCount);
-      printf("\n--\n%d\n--\n", res.failReqCount);
+      printf("\n--\nCompleted Request Count: %d\n--\n", args->completeReqCount);
+      printf("\n--\nFailed Request Count: %d\n--\n", args->failReqCount);
 
-      if (res.completeReqCount >= atoi(args->argv[5]))
+      if (args->completeReqCount >= atoi(args->argv[5]))
       {
         exit(0);
       }
