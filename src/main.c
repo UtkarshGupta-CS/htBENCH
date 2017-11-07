@@ -10,6 +10,12 @@
 
 int main(int argc, char **argv)
 {
+
+  if (argc < 2)
+  {
+    print_usage();
+  }
+
   struct arg_struct args;
   args.argc = argc;
   args.argv = argv;

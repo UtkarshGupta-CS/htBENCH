@@ -8,4 +8,6 @@ typedef struct resultStats
   int threadCount;
 } resultStats;
 
+void print_usage();
+
 #endif // !STATS_H
