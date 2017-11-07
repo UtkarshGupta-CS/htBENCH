@@ -23,11 +23,11 @@ void getMethod(void *arguments)
 
   struct arg_struct *args = arguments;
 
-  while (args->completeReqCount < atoi(args->argv[5]))
+  while (args->completeReqCount < args->noOfReq)
   {
     pthread_mutex_lock(&mutex1);
 
-    if (currentTime() == args->startTime + atoi(args->argv[3]))
+    if (currentTime() == args->startTime + args->duration)
     {
       exit(0);
     }
@@ -43,14 +43,14 @@ void getMethod(void *arguments)
       fprintf(stderr, "usage %s hostname port\n", args->argv[0]);
       exit(0);
     }
-    portno = atoi(args->argv[2]);
+    portno = args->portNo;
 
     // socket is created using socket system call
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd < 0)
       error("ERROR opening socket");
 
-    server = gethostbyname(args->argv[1]);
+    server = gethostbyname(args->hostName);
     if (server == NULL)
     {
       fprintf(stderr, "ERROR, no such host\n");
@@ -92,7 +92,7 @@ void getMethod(void *arguments)
       pthread_mutex_lock(&mutex2);
 
       args->completeReqCount++;
-      if (currentTime() >= args->startTime + atoi(args->argv[3]))
+      if (currentTime() >= args->startTime + args->duration)
       {
         exit(0);
       }
@@ -101,7 +101,7 @@ void getMethod(void *arguments)
       printf("\n--\nCompleted Request Count: %d\n--\n", args->completeReqCount);
       printf("\n--\nFailed Request Count: %d\n--\n", args->failReqCount);
 
-      if (args->completeReqCount >= atoi(args->argv[5]))
+      if (args->completeReqCount >= args->noOfReq)
       {
         exit(0);
       }

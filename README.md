@@ -6,7 +6,7 @@ A Multithreaded Web Server Benchmarking Tool
 ```
 cd src
 make all
-./htbench <hostname> <port_no> <duration> <no_of_threads> <no_of_request>
+./htbench -h <hostname> -p <port_no> -d <duration> -t <no_of_threads> -n <no_of_request>
 ```
 > `sh htbench.sh`
 
