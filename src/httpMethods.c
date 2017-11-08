@@ -22,6 +22,7 @@ void getMethod(void *arguments)
 {
 
   struct arg_struct *args = arguments;
+  struct resultStats resStat;
 
   while (args->completeReqCount < args->noOfReq)
   {
@@ -91,13 +92,31 @@ void getMethod(void *arguments)
     {
       pthread_mutex_lock(&mutex2);
 
-      args->completeReqCount++;
       if (currentTime() >= args->startTime + args->duration)
       {
         exit(0);
       }
 
       printf("%s\n", buffer);
+
+      char contentLength[4];
+      strncpy(contentLength, buffer + valIndex(buffer, "Content-Length:"), 3);
+      contentLength[3] = '\0';
+      resStat.contentLength = contentLength;
+
+      char statusCode[4];
+      strncpy(statusCode, buffer + valIndex(buffer, "HTTP/1.0"), 3);
+      statusCode[3] = '\0';
+
+      if (checkStatusCode(statusCode))
+      {
+        args->completeReqCount++;
+      }
+      else
+      {
+        args->failReqCount++;
+      }
+      
       printf("\n--\nCompleted Request Count: %d\n--\n", args->completeReqCount);
       printf("\n--\nFailed Request Count: %d\n--\n", args->failReqCount);
 
@@ -105,7 +124,6 @@ void getMethod(void *arguments)
       {
         exit(0);
       }
-
       pthread_mutex_unlock(&mutex2);
     }
 

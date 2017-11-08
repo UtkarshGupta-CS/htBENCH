@@ -1,3 +1,4 @@
+
 #ifndef STATS_H
 
 typedef struct resultStats
@@ -6,7 +7,10 @@ typedef struct resultStats
   int failReqCount;
   int timeTaken;
   int threadCount;
+  char *contentLength;
 } resultStats;
+
+int checkStatusCode(char *statusCode);
 
 void print_usage();
 
