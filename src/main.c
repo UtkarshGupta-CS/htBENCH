@@ -95,7 +95,9 @@ int main(int argc, char **argv)
 
   args.portNo = args.portNo ? args.portNo : PORT_NO;
   args.threads = args.threads ? args.threads : NUM_THREADS;
-
+  args.noOfReq = args.noOfReq ? args.noOfReq : NO_OF_REQUESTS;
+  args.duration = args.duration ? args.duration : DURATION;
+  
   pthread_t threads[args.threads];
 
   int rc;
