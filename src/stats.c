@@ -74,4 +74,5 @@ int checkStatusCode(char *statusCode)
   {
     return 0;
   }
+  return 0;
 }

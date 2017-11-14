@@ -47,22 +47,27 @@ int main(int argc, char **argv)
 
     case 'o':
       args.hostName = optarg;
+      printf("host");
       break;
 
     case 'p':
       args.portNo = atoi(optarg);
+      printf("port");
       break;
 
     case 'd':
       args.duration = atoi(optarg);
+      printf("dura");
       break;
 
     case 't':
       args.threads = atoi(optarg);
+      printf("thread");
       break;
 
     case 'r':
       args.noOfReq = atoi(optarg);
+      printf("req");
       break;
 
     case '?': /* The user specified an invalid option.  */
@@ -86,77 +91,12 @@ int main(int argc, char **argv)
     }
   } while (next_option != -1);
 
-  /* int c, index;
-  char *rvalue = NULL;
-  char *tvalue = NULL;
-  char *dvalue = NULL;
-  char *hvalue = NULL;
-  char *pvalue = NULL;
-
-  opterr = 0;
-
-  while ((c = getopt(argc, argv, "h:p:d:t:n:")) != -1)
-  {
-    switch (c)
-    {
-    case 'h':
-      hvalue = optarg;
-      printf("%s", optarg);
-      args.hostName = optarg;
-      break;
-
-    case 'p':
-      pvalue = optarg;
-      printf("%s", optarg);
-      args.portNo = atoi(optarg);
-      break;
-    case 'd':
-      dvalue = optarg;
-      printf("%s", optarg);
-      args.duration = atoi(optarg);
-      break;
-
-    case 't':
-      tvalue = optarg;
-      printf("%s", optarg);
-      args.threads = atoi(optarg);
-      break;
-
-    case 'n':
-      rvalue = optarg;
-      printf("%s", optarg);
-      args.noOfReq = atoi(optarg);
-      break;
-    case '?':
-      if (optopt == 'd' || optopt == 'n' || optopt == 't' || optopt == 'h' || optopt == 'p')
-        fprintf(stderr, "Option -%c requires an argument.\n", optopt);
-      else if (isprint(optopt))
-        fprintf(stderr, "Unknown option `-%c'.\n", optopt);
-      else
-        fprintf(stderr,
-                "Unknown option character `\\x%x'.\n",
-                optopt);
-      print_usage();
-    default:
-      print_usage();
-    }
-  }
-  printf("dvalue = %s, tvalue = %s, rvalue = %s\n",
-         dvalue, tvalue, rvalue);
-
-  for (index = optind; index < argc; index++)
-  {
-    printf("Non-option argument %s\n %d \n", argv[index], index);
-  } */
-
-  args.argc = argc;
-  args.argv = argv;
-
   args.completeReqCount = 0;
 
-  int threadCount = args.threads;
+  args.portNo = args.portNo ? args.portNo : PORT_NO;
+  args.threads = args.threads ? args.threads : NUM_THREADS;
 
-  pthread_t threads[threadCount];
+  pthread_t threads[args.threads];
 
   int rc;
   long t;
@@ -164,19 +104,19 @@ int main(int argc, char **argv)
   // stores the current time in the startTime global variable
   args.startTime = currentTime();
 
-  for (t = 0; t < threadCount; t++)
+  for (t = 0; t < args.threads; t++)
   {
     printf("In main: creating thread %ld\n", t);
 
     rc = pthread_create(&threads[t], NULL, (void *)getMethod, &args);
-    printf("%d", rc);
+
     if (rc != 0)
     {
       printf("ERROR; return code from pthread_create() is %d\n", rc);
       exit(EXIT_FAILURE);
     }
   }
-  for (t = 0; t < threadCount; t++)
+  for (t = 0; t < args.threads; t++)
   {
     pthread_join(threads[t], NULL);
   }

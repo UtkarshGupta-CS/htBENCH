@@ -116,7 +116,7 @@ void getMethod(void *arguments)
       {
         args->failReqCount++;
       }
-      
+
       printf("\n--\nCompleted Request Count: %d\n--\n", args->completeReqCount);
       printf("\n--\nFailed Request Count: %d\n--\n", args->failReqCount);
 

@@ -5,8 +5,8 @@ typedef struct arg_struct
 {
   int argc;
   char **argv;
-  int portNo;
   char* hostName;
+  int portNo;
   int duration;
   int threads;
   int noOfReq;
