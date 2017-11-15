@@ -15,4 +15,10 @@
 // default duration time for the benchmarking will be done
 #define DURATION 10
 
+// default max number of request can be made if duration is not provided
+#define MAX_NO_OF_REQUESTS 10000
+
+// default max duration if number of request is not provided
+#define MAX_DURATION 10000
+
 #endif // !CONSTANTS_H

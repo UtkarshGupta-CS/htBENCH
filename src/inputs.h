@@ -13,6 +13,7 @@ typedef struct arg_struct
   int startTime;
   int completeReqCount;
   int failReqCount;
+  int isVerbose;
 } arg_struct;
 
 #endif // !INPUT_H

@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "stats.h"
+#include "inputs.h"
 
 void print_usage()
 {
-  printf("Usage: htbench <hostname> <port_no> [options]\nOptions are:\n\t-n requests\tNumber of requests to perform\n\t-d duration duration of the test in seconds\n\t-t threads total number of threads to use");
+  printf("Usage: htbench [options]\nOptions are:\n\t-o hostname Hostname of the web server\n\t-p portno portno of the web server\n\t-r request Number of requests to perform\n\t-d duration duration of the test in seconds\n\t-t threads total number of threads to use\n\t-h help Show the usage of the app\n\t-v verbose Provides verbose display of statistics");
   exit(2);
 }
 
@@ -75,4 +76,15 @@ int checkStatusCode(char *statusCode)
     return 0;
   }
   return 0;
+}
+
+void print_stats(void *arg)
+{
+  struct resultStats *resStat = arg;
+  printf("\nStatistics:\n\tRunning %d sec test @ http://%s:%d/\n", resStat->timeTaken, resStat->hostName, resStat->portNo);
+  printf("\tThread Count: %d\n", resStat->threadCount);
+  printf("\tContent Length: %s\n", resStat->contentLength);
+  printf("\tComplete Request Count: %d\n", resStat->completeReqCount);
+  printf("\tFail Request Count: %d\n", resStat->failReqCount);
+  exit(2);
 }

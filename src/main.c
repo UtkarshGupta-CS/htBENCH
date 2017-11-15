@@ -21,12 +21,13 @@ int main(int argc, char **argv)
   struct arg_struct args;
 
   /* A string listing valid short options letters.  */
-  const char *const short_options = "ho:p:d:t:r:";
+  const char *const short_options = "hvo:p:d:t:r:";
   /* An array describing valid long options.  */
   const struct option long_options[] = {
       {"help", 0, NULL, 'h'},
+      {"verbose", 0, NULL, 'v'},
       {"hostname", 1, NULL, 'o'},
-      {"portNo", 1, NULL, 'p'},
+      {"portno", 1, NULL, 'p'},
       {"duration", 1, NULL, 'd'},
       {"threads", 1, NULL, 't'},
       {"requests", 1, NULL, 'r'},
@@ -45,29 +46,27 @@ int main(int argc, char **argv)
          output, and exit with exit code zero (normal termination).  */
       print_usage();
 
+    case 'v':
+      args.isVerbose = 1;
+      break;
     case 'o':
       args.hostName = optarg;
-      printf("host");
       break;
 
     case 'p':
       args.portNo = atoi(optarg);
-      printf("port");
       break;
 
     case 'd':
       args.duration = atoi(optarg);
-      printf("dura");
       break;
 
     case 't':
       args.threads = atoi(optarg);
-      printf("thread");
       break;
 
     case 'r':
       args.noOfReq = atoi(optarg);
-      printf("req");
       break;
 
     case '?': /* The user specified an invalid option.  */
@@ -95,9 +94,15 @@ int main(int argc, char **argv)
 
   args.portNo = args.portNo ? args.portNo : PORT_NO;
   args.threads = args.threads ? args.threads : NUM_THREADS;
-  args.noOfReq = args.noOfReq ? args.noOfReq : NO_OF_REQUESTS;
-  args.duration = args.duration ? args.duration : DURATION;
-  
+  if(!args.noOfReq && !args.duration) {
+      args.noOfReq = NO_OF_REQUESTS;
+      args.duration = DURATION;
+  } else if(!args.duration) {
+    args.duration = MAX_DURATION;
+  } else if(!args.noOfReq) {
+    args.noOfReq = MAX_NO_OF_REQUESTS;
+  }
+
   pthread_t threads[args.threads];
 
   int rc;
@@ -108,8 +113,6 @@ int main(int argc, char **argv)
 
   for (t = 0; t < args.threads; t++)
   {
-    printf("In main: creating thread %ld\n", t);
-
     rc = pthread_create(&threads[t], NULL, (void *)getMethod, &args);
 
     if (rc != 0)
