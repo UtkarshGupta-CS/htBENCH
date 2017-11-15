@@ -6,7 +6,18 @@ A Multithreaded Web Server Benchmarking Tool
 ```
 cd src
 make all
-./htbench -h <hostname> -p <port_no> -d <duration> -t <no_of_threads> -n <no_of_request>
+./htbench
+```
+```
+Usage: htbench [options]
+Options are:
+        -o hostname Hostname of the web server
+        -p portno portno of the web server
+        -r request Number of requests to perform
+        -d duration duration of the test in seconds
+        -t threads total number of threads to use
+        -h help Show the usage of the app
+        -v verbose Provides verbose display of statistics
 ```
 > `sh htbench.sh`
 
