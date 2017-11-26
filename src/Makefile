@@ -14,7 +14,7 @@ httpMethods.o: httpMethods.c httpMethods.h inputs.h constants.h utils.h stats.h
 utils.o: utils.c utils.h
 	gcc -c utils.c
 
-stats.o: stats.c stats.h inputs.h
+stats.o: stats.c stats.h inputs.h utils.h
 	gcc -c stats.c
 
 clean:

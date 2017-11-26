@@ -6,6 +6,7 @@ extern int failReqCount;
 extern int threadCount;
 extern int portNo;
 extern long timeTaken;
+extern long startTime;
 extern long contentLength;
 extern long totalContentLength;
 extern char *hostName;

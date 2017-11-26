@@ -5,6 +5,7 @@
 
 #include "stats.h"
 #include "inputs.h"
+#include "utils.h"
 
 // Initialising the GLOBALS
 int completeReqCount = 0;
@@ -12,6 +13,7 @@ int failReqCount = 0;
 int threadCount = 0;
 int portNo = 0;
 long timeTaken = 0;
+long startTime = 0;
 long contentLength = 0;
 long totalContentLength = 0;
 char *hostName = "";
@@ -21,7 +23,15 @@ char *hostName = "";
   */
 void print_usage()
 {
-  printf("Usage: htbench [options]\nOptions are:\n\t-o hostname Hostname of the web server\n\t-p portno portno of the web server\n\t-r request Number of requests to perform\n\t-d duration duration of the test in seconds\n\t-t threads total number of threads to use\n\t-h help Show the usage of the app\n\t-v verbose Provides verbose display of statistics\n");
+  printf("Usage: htbench [options]\n");
+  printf("Options are:\n");
+  printf("\t-o --hostname Hostname of the web server\n");
+  printf("\t-p --portno   portno of the web server\n");
+  printf("\t-r --request  Number of requests to perform\n");
+  printf("\t-d --duration duration of the test in seconds\n");
+  printf("\t-t --threads  total number of threads to use\n");
+  printf("\t-h --help     Show the usage of the app\n");
+  printf("\t-v --verbose  Provides verbose display of statistics\n");
   exit(2);
 }
 
@@ -104,6 +114,7 @@ void print_stats(void *arg)
 {
   int totalRequests = (completeReqCount + failReqCount);
   printf("\nDone!\n\nStatistics:\n");
+  timeTaken = currentTime() - startTime;
 
   printf("\tServer Hostname:        %s\n", hostName);
   printf("\tServer Port:            %d\n", portNo);
@@ -114,7 +125,7 @@ void print_stats(void *arg)
   printf("\tContent length:         %ld bytes (mean)\n", totalContentLength / (totalRequests ? totalRequests : 1));
   printf("\tTotal content length:   %ld bytes\n", totalContentLength);
   printf("\tRequests per second:    %ld (mean)\n", totalRequests / (timeTaken ? timeTaken : 1));
-  printf("\tTime per request:       %ld ms (mean)\n", (timeTaken * 1000) / (totalRequests ? totalRequests : 1));
+  printf("\tTime per request:       %ld ms (mean)\n", (totalRequests ? (timeTaken * 1000) / totalRequests : 0));
   printf("\tTransfer rate:          %ld bytes/sec\n", totalContentLength / (timeTaken ? timeTaken : 1));
   exit(2);
 }

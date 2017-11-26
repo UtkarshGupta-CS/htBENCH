@@ -12,7 +12,7 @@ int *init_array(int size);
 // Method that calls perror method and print out the error
 void error(const char *msg)
 {
-  perror(msg);
+  fprintf(stderr, "%s", msg);
   exit(0);
 }
 

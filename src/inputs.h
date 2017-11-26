@@ -10,7 +10,6 @@ typedef struct arg_struct
   int duration;
   int threads;
   int noOfReq;
-  int startTime;
   int isVerbose;
 } arg_struct;
 /****************************************************/

@@ -1,15 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <pthread.h>
-#include <ctype.h>
-#include <getopt.h>
+#include <pthread.h> /* pthread_join, pthread_create */
+#include <getopt.h> /* getopt_long */
+#include <ctype.h> /* isprint */
 #include <signal.h>
 
+#include "constants.h"
 #include "inputs.h"
 #include "httpMethods.h"
-#include "constants.h"
 #include "utils.h"
-#include "stats.h"
+#include "stats.h" /* print_usage */
 
 int main(int argc, char **argv)
 {
@@ -49,28 +49,36 @@ int main(int argc, char **argv)
          output, and exit with exit code zero (normal termination).  */
       print_usage();
 
-    case 'v':
+    case 'v': /* -v or --verbose */
       args.isVerbose = 1;
       break;
       
-    case 'o':
+    case 'o': /* -o --hostname */
       args.hostName = optarg;
       break;
 
-    case 'p':
+    case 'p': /* -p --portno */
       args.portNo = atoi(optarg);
+      if(!args.portNo)
+        error("htbench: Port Number provided must be natural number");
       break;
 
-    case 'd':
+    case 'd': /* -d --duration */
       args.duration = atoi(optarg);
+      if(!args.duration)
+        error("htbench: Duration provided must be natural number");
       break;
 
-    case 't':
+    case 't': /* -t --threads */
       args.threads = atoi(optarg);
+      if(!args.threads)
+        error("htbench: Thread Count provided must be natural number");
       break;
 
-    case 'r':
+    case 'r': /* -r --request */
       args.noOfReq = atoi(optarg);
+      if(!args.noOfReq)
+        error("htbench: Request Count provided must be natural number");
       break;
 
     case '?': /* The user specified an invalid option.  */
@@ -94,6 +102,7 @@ int main(int argc, char **argv)
     }
   } while (next_option != -1);
 
+  // Setting the arg_struct values with CONSTANT if input is not provided
   args.portNo = args.portNo ? args.portNo : PORT_NO;
   args.threads = args.threads ? args.threads : NUM_THREADS;
 
@@ -120,10 +129,10 @@ int main(int argc, char **argv)
   long t;
 
   // stores the current time in the startTime global variable
-  args.startTime = currentTime();
+  startTime = currentTime();
 
-
-  printf("Running htBENCH, Version 1.0\n\nPlease be patient while we benchmark http://%s:%d/...\n(Press Ctrl + C at any time to stop benchmarking)\n", args.hostName, args.portNo);
+  printf("Running htBENCH, Version 1.0\n\nPlease be patient while we benchmark ");
+  printf("http://%s:%d/...\n(Press Ctrl + C at any time to stop benchmarking)\n\n", args.hostName, args.portNo);
 
   for (t = 0; t < args.threads; t++)
   {
@@ -144,7 +153,7 @@ int main(int argc, char **argv)
 
     if (rc != 0)
     {
-      printf("ERROR; return code from pthread_create() is %d\n", rc);
+      printf("htbench: ERROR; return code from pthread_create() is %d\n", rc);
       exit(EXIT_FAILURE);
     }
   }
@@ -166,7 +175,7 @@ int main(int argc, char **argv)
     pthread_join(threads[t], NULL);
     if (jrc != 0)
     {
-      printf("ERROR; return code from pthread_join() is %d\n", jrc);
+      printf("htbench: ERROR; return code from pthread_join() is %d\n", jrc);
       exit(EXIT_FAILURE);
     }
   }
