@@ -14,6 +14,21 @@
 int main(int argc, char **argv)
 {
 
+  /**
+   * signal -- simplified software signal facilities
+   * 
+   * sig_t signal(int sig, sig_t func);
+   * There are 32 signal type that can be captured using signal function. 5 are listed below:
+   * No    Name         Default Action       Description
+     1     SIGHUP       terminate process    terminal line hangup
+     2     SIGINT       terminate process    interrupt program
+     3     SIGQUIT      create core image    quit program
+     4     SIGILL       create core image    illegal instruction
+     5     SIGTRAP      create core image    trace trap
+   * 
+   * @params {{int}} sig -- specifies which signal was received
+   * @params {{sig_t}} function which runs after the signal is captured
+    */
   signal(SIGINT, print_stats);
 
   if (argc < 2)
