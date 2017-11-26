@@ -3,7 +3,7 @@
 #include <pthread.h> /* pthread_join, pthread_create */
 #include <getopt.h> /* getopt_long */
 #include <ctype.h> /* isprint */
-#include <signal.h>
+#include <signal.h> /* signal */
 
 #include "constants.h"
 #include "inputs.h"
@@ -59,25 +59,25 @@ int main(int argc, char **argv)
 
     case 'p': /* -p --portno */
       args.portNo = atoi(optarg);
-      if(!args.portNo)
+      if(!args.portNo || args.portNo < 0)
         error("htbench: Port Number provided must be natural number");
       break;
 
     case 'd': /* -d --duration */
       args.duration = atoi(optarg);
-      if(!args.duration)
+      if(!args.duration || args.portNo < 0)
         error("htbench: Duration provided must be natural number");
       break;
 
     case 't': /* -t --threads */
       args.threads = atoi(optarg);
-      if(!args.threads)
+      if(!args.threads || args.portNo < 0)
         error("htbench: Thread Count provided must be natural number");
       break;
 
     case 'r': /* -r --request */
       args.noOfReq = atoi(optarg);
-      if(!args.noOfReq)
+      if(!args.noOfReq || args.portNo < 0)
         error("htbench: Request Count provided must be natural number");
       break;
 
