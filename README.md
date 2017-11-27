@@ -18,7 +18,7 @@ Options are:
         -t --threads total number of threads to use
         -h --help Show the usage of the app
         -v --verbose Provides verbose display of statistics
-
+```
 ### Collaborators
 
 * [__Utkarsh Gupta__](https://github.com/UtkarshGupta-CS), <https://twitter.com/utkarshgupta97>
